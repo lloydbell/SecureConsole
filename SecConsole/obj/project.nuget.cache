@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "mhk373GKW6nBtaiHktiZKoHRqq90bO3bVbmpjX9QnFEeT8wRgLFfdqh8PQEAdVaF6GKqwLBx4IpbRQyc79eLsQ==",
+  "success": true,
+  "projectFilePath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/SecConsole/SecConsole.csproj",
+  "expectedPackageFiles": [
+    "/home/throwaway/.nuget/packages/microsoft.net.illink.tasks/8.0.19/microsoft.net.illink.tasks.8.0.19.nupkg.sha512",
+    "/home/throwaway/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/8.0.19/microsoft.netcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
+    "/home/throwaway/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/8.0.19/microsoft.aspnetcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
+    "/home/throwaway/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.19/microsoft.netcore.app.host.linux-x64.8.0.19.nupkg.sha512"
+  ],
+  "logs": []
+}
