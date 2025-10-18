@@ -1,9 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\Libs\Libs.csproj" />
+    <ProjectReference Include="..\Libs\Libs.csproj"/>
   </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -11,7 +9,6 @@
     <Nullable>enable</Nullable>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>  
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
-
 </Project>

@@ -13,6 +13,4 @@
         public ConsoleColor TextColor { get; set; } = ConsoleColor.White;
         public ConsoleColor BackgroundColor { get; set; } = ConsoleColor.Black;
 
-        public ConsoleColor GetTextColor() { return TextColor; }
-        public ConsoleColor GetBackColor() { return BackgroundColor; }
     }

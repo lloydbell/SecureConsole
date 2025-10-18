@@ -26,7 +26,7 @@ public class EnglishStrings : LocalizedStringsBase
         Add("StringCommand", "Command");
         Add("ApplicationName", "Secure Console");
         Add("Copyright", "Copyright© Lloyd Bell 2025");
-        Add("ApplicationDescription", "Custom console that scrambles the shell commands.");
+        Add("ApplicationDescription", "Custom console that obsificates the names of the shell commands.");
         Add("FirstRunMessage", "Please wait while the system commands are obscifcated.");
         Add("SettingsSaveSuccess", "Settings Saved.");
         Add("SettingsSaveFailed", "Failed to save settings.");

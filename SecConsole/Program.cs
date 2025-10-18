@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Text;
+using System.IO;
 using System.Formats.Asn1;
 using System.Text.Json;
+using System.Security.Cryptography;
 using Libs;
 
 namespace SecConsole;
@@ -13,7 +16,7 @@ class Program
     static private string _workingDirectory = "";
     static private string _fileDirectory = "/usr/bin/";
     static private string _settingsFile = "settings.json";
-    static private Settings _settings = new();
+    static private Settings.Application _settings = new();
     static private Bash bash = new Bash();
     static private Libs.ColorTerminal Terminal = new ColorTerminal();
     static private Scramble _scramble = new Scramble("");
@@ -25,7 +28,7 @@ class Program
 
     public static void Main(string[] args)
     {
-        _settings = LoadSettings();
+        LoadSettings();
         Terminal = new(_settings.Colors.Default);
         EnglishStrings _strings = new EnglishStrings();
         EnglishCharacterLimits _limits = new EnglishCharacterLimits();
@@ -36,11 +39,11 @@ class Program
         if (_isFirstRun)
             _results = _shell.RunCommand("clear");
 
-        ShowDevider("#");
+        ShowDevider(" ");
         Terminal.WriteCentered(_strings.Get("ApplicationName"));
         Terminal.WriteCentered(_strings.Get("Copyright"));
         Terminal.WriteCentered(_strings.Get("ApplicationDescription"));
-        ShowDevider("=");
+        ShowDevider(" ");
 
         if (_isFirstRun)
         {
@@ -49,7 +52,7 @@ class Program
             ShowMessage($"CPU: {_shell.RunCommand("uname", "-p")}");
             ShowMessage($"OS: {_shell.RunCommand("uname", "-o")}");
         }
-        ShowDevider("#");
+        ShowDevider(" ");
 
         
         /*
@@ -177,24 +180,52 @@ class Program
 
     private static void DisplayMenu(ILocalizedStrings strings)
     {
-        LineColors secondColor = _settings.Colors.Warnings;
+        LineColors firstColor = new LineColors(ConsoleColor.Blue, ConsoleColor.Black);
+        LineColors secondColor = new LineColors(ConsoleColor.White, ConsoleColor.Black); ;
+        int count = 1;
         string seperator = " - ";
         //Terminal.Write(_shell.RunCommand("clear", ""));
-        ShowDevider("=", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
+        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
         Terminal.WriteCentered("Menu");
-        ShowDevider("-", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.Black));
-        AddMessage($"{strings.Get("MenuOptionQuit")}{seperator}");
-        ShowMessage("Exit the console.", secondColor);
-        AddMessage($"{strings.Get("MenuOptionConvert")}{seperator}");
-        ShowMessage("Obsificate the commands.", secondColor);
-        ShowMessage($"{strings.Get("MenuOptionRevert")}' - Revert to non obsfucated.");        
-        ShowMessage($"{strings.Get("MenuOptionLoadSettings")}' - ");
-        ShowMessage($"{strings.Get("MenuOptionSaveSettings")}' - ");
-        ShowMessage($"{strings.Get("MenuOptionEncryptFile")}' - ");
-        ShowMessage($"{strings.Get("MenuOptionDecryptFile")}' - ");
-        ShowMessage($"{strings.Get("MenuOptionSettings")}' - Edit the console settings.");
-        ShowMessage($"{strings.Get("MenuOptionTest")}' - Test to make sure commands are obsfucated.");
-        ShowDevider("=", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
+        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionQuit")}{seperator}", firstColor);
+        AddEndMessage("Exit the console.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionConvert")}{seperator}", firstColor);
+        AddEndMessage("Obsificate the commands.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionRevert")}{seperator}", firstColor);
+        AddEndMessage("Revert to non obsfucated.", secondColor);
+        
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionLoadSettings")}{seperator}", firstColor);
+        AddEndMessage("Loads the settings.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionSaveSettings")}{seperator}", firstColor);
+        AddEndMessage("Saves the settings.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionEncryptFile")}{seperator}", firstColor);
+        AddEndMessage("Encrypt a file.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionDecryptFile")}{seperator}", firstColor);
+        AddEndMessage("Decrypt a file.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionSettings")}{seperator}", firstColor);
+        AddEndMessage("Edit the console settings.", secondColor);
+
+        AddMessage($"{count++}. ", secondColor);
+        AddMessage($"{strings.Get("MenuOptionTest")}{seperator}", firstColor);
+        AddEndMessage("Test to make sure commands are obsfucated.", secondColor);
+
+        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
     }
 
 
@@ -474,7 +505,10 @@ class Program
     private static bool SaveSettings()
     {
         try{
-            string jsonString = JsonSerializer.Serialize(_settings);
+            ShowDebug("SaveSettings()");
+            //string jsonString = JsonSerializer.Serialize(_settings);
+            string jsonString = JsonSerializer.Serialize(new Settings.Terminal());
+            ShowDebug($"jsonString = {jsonString}");
             bool success = SaveFile(_settingsFile, jsonString);
             return true;
         }
@@ -485,19 +519,21 @@ class Program
         }        
     }
 
-    private static Settings LoadSettings()
+    private static void LoadSettings()
     {
         try{
             ShowDebug("LoadSettings()");
             string jsonString = LoadFile(_settingsFile);
-            Settings? settings = JsonSerializer.Deserialize<Settings>(jsonString);
+            Settings.Application? settings = JsonSerializer.Deserialize<Settings.Application>(jsonString);
             if(settings == null)
-                return new Settings();
-            return (Settings)settings;
+                _settings = new Settings.Application();
+            _settings = settings;
         }
         catch(Exception ex)
         {
-            return new Settings();
+            ShowDebug("Failed to load file.");
+            _settings = new Settings.Application();
+            SaveSettings();
         }
     }
 
@@ -515,10 +551,13 @@ class Program
 
     private static bool SaveFile(string filepath, string content)
     {
-        string command = Commands.Get("echo");
-        BashResult results = bash.Command($"{command} {content} > {filepath}");
-        if(results.ExitCode != 0){
-            throw new Exception(results.ErrorMsg);
+        try
+        {
+            File.WriteAllText(filepath, content);
+        }
+        catch
+        {
+            throw new Exception($"Failed to save file {filepath}");
         }
         return true;
     }    
@@ -535,20 +574,10 @@ class Program
     private static void EncryptFile(string filepath){
         try{            
             ShowDebug($"EncryptFile( {filepath} )");
-            /*
             string content = LoadFile(filepath);
             ShowDebug($"content = {content}");
-            string echoCommand = Commands.Get("echo");
-            string command = $"{echoCommand} -n '{content}' | openssl enc -aes128 -pbkdf2 -a -e -k {_key}";
-            */
-            string catCommand = Commands.Get("cat");
-            string command = $"{catCommand} {filepath} | openssl enc -aes128 -pbkdf2 -a -e -k {_key} > {filepath}";
-            BashResult results = bash.Command(command);
-            ShowDebug($"ExitCode = {results.ExitCode}");
-            if(results.ExitCode != 0){
-                throw new Exception(results.ErrorMsg);
-            }
-            //SaveFile(filepath, results.Output);
+            string encrypted = StringEncrypt.Encrypt(content, _key);
+            SaveFile(filepath, encrypted);
         }
         catch(Exception ex)
         {
@@ -559,24 +588,10 @@ class Program
     private static void DecryptFile(string filepath){
         try{            
             ShowDebug($"DecryptFile( {filepath} )");
-            /*
             string content = LoadFile(filepath);
             ShowDebug($"content = {content}");
-            string echoCommand = Commands.Get("echo");
-            string command = $"{echoCommand} -n '{content}' | openssl enc -aes128 -pbkdf2 -a -d -k {_key}";
-            */
-
-            string content = LoadFile(filepath);
-            ShowDebug($"content = {content}");
-
-            string catCommand = Commands.Get("cat");
-            string command = $"{catCommand} {filepath} | openssl enc -aes128 -pbkdf2 -a -d -k {_key} > {filepath}";            
-            BashResult results = bash.Command(command);
-            ShowDebug($"Decrypting file {filepath} - ExitCode = {results.ExitCode}");
-            if(results.ExitCode != 0){
-                throw new Exception(results.ErrorMsg);
-            }
-            //SaveFile(filepath, results.Output);
+            string decrypted = StringEncrypt.Decrypt(content, _key);
+            SaveFile(filepath, decrypted);
         }
         catch(Exception ex)
         {
@@ -606,9 +621,13 @@ class Program
     private static void AddMessage(string message){
         Terminal.Write(message, _settings.Colors.Default);
     }
-    private static void AddMessage(string message, LineColors colors){
+    private static void AddMessage(string message, LineColors colors)
+    {
         Terminal.Write(message, colors);
-    }    
+    } 
+    private static void AddEndMessage(string message, LineColors colors){
+        Terminal.Write(message, colors, true);
+    }        
     private static void ShowCommand(string message){
         Terminal.WriteLine(message, _settings.Colors.Commands);
     }  
@@ -630,10 +649,11 @@ class Program
     private static void ShowError(string message){
         Terminal.WriteLine(message, _settings.Colors.Errors);
     }
-    private static void ShowDebug(string message){
-        if(_debugging)
+    private static void ShowDebug(string message)
+    {
+        if (_debugging)
             Terminal.WriteLine(message, _settings.Colors.Debugging);
-    }    
-  
+    }
+    
 
 }
