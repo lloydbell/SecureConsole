@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecConsole")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c4228a1bdf9b374cf8277f1f1d06a527f310a951")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d975f75f088778d30ffcefc35525c8cc2ae06e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecConsole")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecConsole")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

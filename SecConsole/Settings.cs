@@ -1,9 +1,15 @@
+using Libs;
+
 namespace SecConsole
 {
     public class Settings
     {
         public Settings(){}
-    
+
+    public ColorSettings Colors {get; set;} = new ColorSettings();       
+
+        public string PromptMarker{get; set;} = "$ ";
+
         public int WindowWidth {
             get{
                 return Console.WindowWidth;
@@ -20,16 +26,5 @@ namespace SecConsole
                 Console.WindowHeight = value;
             }
         } 
-
-        public string ToJson(){
-
-            string results = "";
-            results += "{";
-            results += $"\'WindowWidth\': \'{WindowWidth}\'";
-            results += ",";
-            results += $"\'WindowHeight\': \'{WindowHeight}\'";       
-            results += "}";
-            return results;
-        }
     }
 }

@@ -1,0 +1,2 @@
+/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/bin/Release/net8.0/linux-x64/publish/SecConsole.pdb
+/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/bin/Release/net8.0/linux-x64/publish/SecConsole

@@ -108,11 +108,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/SecConsole/SecConsole.csproj",
+      "projectUniqueName": "/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/SecConsole.csproj",
       "projectName": "SecConsole",
-      "projectPath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/SecConsole/SecConsole.csproj",
+      "projectPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/SecConsole.csproj",
       "packagesPath": "/home/throwaway/.nuget/packages/",
-      "outputPath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/SecConsole/obj/",
+      "outputPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/throwaway/.nuget/NuGet/NuGet.Config"
@@ -127,8 +127,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj": {
-              "projectPath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj"
+            "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj": {
+              "projectPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj"
             }
           }
         }

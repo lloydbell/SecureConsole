@@ -10,3 +10,15 @@
 /home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/obj/Release/net8.0/refint/Libs.dll
 /home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/obj/Release/net8.0/Libs.pdb
 /home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/obj/Release/net8.0/ref/Libs.dll
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/Libs.deps.json
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/Libs.dll
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/Libs.pdb
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.GeneratedMSBuildEditorConfig.editorconfig
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.AssemblyInfoInputs.cache
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.AssemblyInfo.cs
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.csproj.CoreCompileInputs.cache
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.sourcelink.json
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.dll
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/refint/Libs.dll
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/Libs.pdb
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/Release/net8.0/ref/Libs.dll

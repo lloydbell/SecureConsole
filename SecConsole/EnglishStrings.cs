@@ -10,7 +10,8 @@ public class EnglishStrings : LocalizedStringsBase
         Add("MenuOptionSettings", "options");
         Add("MenuOptionConvert", "convert");
         Add("MenuOptionRevert", "revert");
-        Add("MenuOptionHashFile", "hash");
+        Add("MenuOptionEncryptFile", "encrypt");
+        Add("MenuOptionDecryptFile", "decrypt");
         Add("MenuOptionTest", "test");
         Add("MenuOptionLoadSettings", "Load Settings");
         Add("MenuOptionSaveSettings", "Save Settings");

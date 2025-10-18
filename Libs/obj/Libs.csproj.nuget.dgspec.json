@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj": {}
+    "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj": {}
   },
   "projects": {
-    "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj": {
+    "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj",
+        "projectUniqueName": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj",
         "projectName": "Libs",
-        "projectPath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj",
+        "projectPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj",
         "packagesPath": "/home/throwaway/.nuget/packages/",
-        "outputPath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/obj/",
+        "outputPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/throwaway/.nuget/NuGet/NuGet.Config"

@@ -12,6 +12,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SecConsole
-build_property.ProjectDir = /home/throwaway/Desktop/DotNet Projects/SecureConsole/SecConsole/
+build_property.ProjectDir = /home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

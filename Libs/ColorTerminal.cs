@@ -5,7 +5,9 @@ public class ColorTerminal
     private int _inputWait = 100;
     private string _input = "";
     private string _blankLine = "";
-    public ColorTerminal() { }
+    public ColorTerminal() { 
+        CalculateBlankLine();
+    }
     public ColorTerminal(ConsoleColor textColor, ConsoleColor backgroundColor)
     {
         TextColor = textColor;
@@ -37,16 +39,19 @@ public class ColorTerminal
             ClearLine();
             string s = $"{TerminalString}{_input}";
             Console.Write(s);           
-            //Console.CursorLeft = s.Count();
         }
     }
 
     private void CalculateBlankLine(){
+        _blankLine = CalculateFilledLine(" ");  
+    }
+
+    private string CalculateFilledLine(string character){
         int max = Console.BufferWidth;
         string s = "";
         while (s.Length < max)
-            s += " ";
-        _blankLine = s;    
+            s += character;
+        return s;   
     }
 
     public void ClearLine()
@@ -55,25 +60,23 @@ public class ColorTerminal
         Console.Write(_blankLine);
         Console.CursorLeft = 0;
     }
+
+    public void WriteDevider(string text, LineColors lineColors)
+    {
+        if (text.Length == 0)
+            text = " ";
+        Console.ForegroundColor = lineColors.TextColor;
+        Console.BackgroundColor = lineColors.BackgroundColor;
+        string tmp = CalculateFilledLine(text);
+        Console.WriteLine(tmp);
+        ResetColors();
+    }
+
     public void WriteLine(string text)
     {
         if (text.Length == 0)
             return;
         ResetColors();
-        int max = Console.WindowWidth - text.Length;
-        string s = "";
-        while (s.Length < max)
-            s += text;
-        Console.WriteLine(s);
-        ResetColors();
-    }
-
-    public void WriteLine(string text, ConsoleColor foreground, ConsoleColor background)
-    {
-        if (text.Length == 0)
-            return;        
-        Console.ForegroundColor = foreground;
-        Console.BackgroundColor = background;
         int max = Console.WindowWidth - text.Length;
         string s = "";
         while (s.Length < max)
@@ -88,10 +91,9 @@ public class ColorTerminal
             return;
         Console.ForegroundColor = lineColors.TextColor;
         Console.BackgroundColor = lineColors.BackgroundColor;
-        int max = Console.WindowWidth;
-        string s = "";
-        while (s.Length < max - text.Length)
-            s += text;
+        string tmp = _blankLine;
+        tmp = tmp.Substring(text.Length);
+        string s = $"{text}{tmp}";
         Console.WriteLine(s);
         ResetColors();
     }
@@ -140,44 +142,31 @@ public class ColorTerminal
     public void Write(string text)
     {
         ResetColors();
-        int max = Console.WindowWidth;
-        string s = text;
-        while (s.Length < max - text.Length)
-            s += " ";
-        Console.WriteLine(s);
+        Console.Write(text);
         ResetColors();
     }
     public void Write(string text, ConsoleColor foreground)
     {
+        ResetColors();
         Console.ForegroundColor = foreground;
-        int max = Console.WindowWidth;
-        string s = text;
-        while (s.Length < max)
-            s += " ";
-        Console.WriteLine(s);
+        Console.Write(text);
         ResetColors();
     }
     public void Write(string text, ConsoleColor foreground, ConsoleColor background)
     {
+        ResetColors();
         Console.ForegroundColor = foreground;
         Console.BackgroundColor = background;
-        int max = Console.WindowWidth;
-        string s = text;
-        while (s.Length < max)
-            s += " ";
-        Console.WriteLine(s);
+        Console.Write(text);
         ResetColors();
     }
 
     public void Write(string text, LineColors lineColors)
     {
+        ResetColors();
         Console.ForegroundColor = lineColors.TextColor;
         Console.BackgroundColor = lineColors.BackgroundColor;
-        int max = Console.WindowWidth;
-        string s = text;
-        while (s.Length < max)
-            s += " ";
-        Console.WriteLine(s);
+        Console.Write(text);
         ResetColors();
     }
 

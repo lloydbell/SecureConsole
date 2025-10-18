@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nKU7/vBJUUOSZ3RFm0tkHFLgcVSXzudVLdsfsnOe38f6LMu9lPWfiI04481YZAj5uZlFekirSFdqf20panNhcw==",
+  "dgSpecHash": "NYk12S06TZxX/7EMSKbwzgBUdaK7Y0F7KcELz38B38BMvMhw1IWBbblqTFx97OM6TXXZDhR1Vc394w2X4Nzn3w==",
   "success": true,
-  "projectFilePath": "/home/throwaway/Desktop/DotNet Projects/SecureConsole/Libs/Libs.csproj",
+  "projectFilePath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

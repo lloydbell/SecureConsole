@@ -1,0 +1,3 @@
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/publish/Libs.dll
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/publish/Libs.deps.json
+/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/bin/Release/net8.0/publish/Libs.pdb
