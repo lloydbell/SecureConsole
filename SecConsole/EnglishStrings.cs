@@ -15,6 +15,7 @@ public class EnglishStrings : LocalizedStringsBase
         Add("MenuOptionTest", "test");
         Add("MenuOptionLoadSettings", "Load Settings");
         Add("MenuOptionSaveSettings", "Save Settings");
+        Add("MenuOptionCommand", "Command");
         Add("DescriptionName", "Your name will be used in place of sudo");
         Add("PromptName", "Enter your name");
         Add("StringName", "name");

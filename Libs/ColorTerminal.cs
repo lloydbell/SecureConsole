@@ -92,7 +92,9 @@ public class ColorTerminal
         Console.ForegroundColor = lineColors.TextColor;
         Console.BackgroundColor = lineColors.BackgroundColor;
         string tmp = _blankLine;
-        tmp = tmp.Substring(text.Length + Input.Length);
+        int textLength = text.Length + Input.Length;
+        if(textLength < tmp.Length)
+           tmp = tmp.Substring(textLength);
         string s = $"{text}{tmp}";
         Console.WriteLine(s);
         ResetColors();
@@ -153,7 +155,6 @@ public class ColorTerminal
         Console.Write(text);
         if (endLine)
         {
-            Console.Write(text);
             int max = Console.BufferWidth;
             string s = "";
             int i = Console.CursorLeft;

@@ -1,1 +1,1 @@
-{"PromptMarker":"$ ","WindowWidth":140,"WindowHeight":24}
+{"Colors":{"Default":{"TextColor":15,"BackgroundColor":0},"Commands":{"TextColor":1,"BackgroundColor":0},"Updates":{"TextColor":3,"BackgroundColor":0},"Spacers":{"TextColor":3,"BackgroundColor":1},"Warnings":{"TextColor":14,"BackgroundColor":0},"Errors":{"TextColor":4,"BackgroundColor":0},"Debugging":{"TextColor":10,"BackgroundColor":0}},"Terminal":{"PromptMarker":"$ ","WindowWidth":140,"WindowHeight":24}}

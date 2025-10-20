@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "12XSOZ+VnkzqscVF5OPzNVW9aDuGgXZafrkGdfST4KXDViqpBbTyxSQMhuqzZ0RGlfV9x2p6WDpfBt26O3XPJw==",
+  "dgSpecHash": "Z1/WE8MYqVNXGxSnD4S4/09nvxuZ0HItOtcb7/XNl4tO4oOjYSZPiLFRI1T8RGI6It/fD5T9+9lo7e1bRrYmIA==",
   "success": true,
   "projectFilePath": "/home/throwaway/Desktop/Git Repos/SecureConsole/SecConsole/SecConsole.csproj",
   "expectedPackageFiles": [
-    "/home/throwaway/.nuget/packages/microsoft.net.illink.tasks/8.0.19/microsoft.net.illink.tasks.8.0.19.nupkg.sha512",
-    "/home/throwaway/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/8.0.19/microsoft.netcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
-    "/home/throwaway/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/8.0.19/microsoft.aspnetcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
-    "/home/throwaway/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.19/microsoft.netcore.app.host.linux-x64.8.0.19.nupkg.sha512"
+    "/root/.nuget/packages/microsoft.net.illink.tasks/8.0.19/microsoft.net.illink.tasks.8.0.19.nupkg.sha512",
+    "/root/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/8.0.19/microsoft.netcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
+    "/root/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/8.0.19/microsoft.aspnetcore.app.runtime.linux-x64.8.0.19.nupkg.sha512",
+    "/root/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.19/microsoft.netcore.app.host.linux-x64.8.0.19.nupkg.sha512"
   ],
   "logs": []
 }

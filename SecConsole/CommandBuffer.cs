@@ -38,5 +38,8 @@ public class CommandBuffer
         Position = 0;
         return _commands.Last();
     }         
+    public List<string> GetAll(){
+        return _commands;
+    }
 
 }

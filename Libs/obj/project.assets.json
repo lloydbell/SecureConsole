@@ -8,7 +8,7 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/throwaway/.nuget/packages/": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
@@ -16,11 +16,11 @@
       "projectUniqueName": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj",
       "projectName": "Libs",
       "projectPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/Libs.csproj",
-      "packagesPath": "/home/throwaway/.nuget/packages/",
+      "packagesPath": "/root/.nuget/packages/",
       "outputPath": "/home/throwaway/Desktop/Git Repos/SecureConsole/Libs/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/throwaway/.nuget/NuGet/NuGet.Config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

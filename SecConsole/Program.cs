@@ -5,6 +5,8 @@ using System.Formats.Asn1;
 using System.Text.Json;
 using System.Security.Cryptography;
 using Libs;
+using Libs.SecLib;
+using Libs.SecLib.Encryption;
 
 namespace SecConsole;
 
@@ -16,6 +18,8 @@ class Program
     static private string _workingDirectory = "";
     static private string _fileDirectory = "/usr/bin/";
     static private string _settingsFile = "settings.json";
+    static private Commands _commands = new Commands();
+    static private SpecialCommands _specialCommands = new SpecialCommands();
     static private Settings.Application _settings = new();
     static private Bash bash = new Bash();
     static private Libs.ColorTerminal Terminal = new ColorTerminal();
@@ -28,7 +32,58 @@ class Program
 
     public static void Main(string[] args)
     {
+        _specialCommands.Add(CommandType.MENU, "menu", "", "Displays the menu.");
+        _specialCommands.Add(CommandType.BLUR, "blur", "", "Obsificates the shell commands.");
+        _specialCommands.Add(CommandType.FOCUS, "focus", "", "Restores the shell commands.");
+        _specialCommands.Add(CommandType.RUN, "run", "<filepath>", "Runs a shell script file.");
+        _specialCommands.Add(CommandType.CONVERT, "convert", "<filepath>", "Converts a shell script file to use obsificated commands.");
+        _specialCommands.Add(CommandType.ENCRYPT, "encrypt", "<filepath>", "Encrypts a file.");
+        _specialCommands.Add(CommandType.DECRYPT, "decrypt", "<filepath>", "Decrypts a file.");
+        _specialCommands.Add(CommandType.SHOW, "show", "<command>", "Displays the current value for a shell command.");
+        _specialCommands.Add(CommandType.PAST, "past", "", "Show terminal history.");
+        _specialCommands.Add(CommandType.TEST, "test", "", "Test Obsificated names.");
+        _specialCommands.Add(CommandType.QUIT, "quit", "", "Quits the application");
+
+        _commands.Add("apt");
+        _commands.Add("cat");
+        _commands.Add("cd");
+        _commands.Add("curl");
+        _commands.Add("chfn");
+        _commands.Add("chmod");
+        _commands.Add("chown");
+        _commands.Add("clear");
+        _commands.Add("chsh");
+        _commands.Add("ciptool");
+        _commands.Add("cmake");
+        _commands.Add("echo");
+        _commands.Add("history");
+        _commands.Add("id");
+        //_commands.Add("find"); 
+        _commands.Add("netstat");
+        _commands.Add("last");
+        _commands.Add("open");
+        _commands.Add("passwd");
+        _commands.Add("ping");
+        _commands.Add("ps");
+        _commands.Add("scp");
+        _commands.Add("su");
+        _commands.Add("sudo", "lloyd");
+        _commands.Add("sestatus");
+        _commands.Add("ssh");
+        _commands.Add("ssh-keygen");
+        _commands.Add("ls");
+        _commands.Add("top");
+        _commands.Add("touch");
+        _commands.Add("type");
+        _commands.Add("ufw");
+        _commands.Add("visudo");
+        _commands.Add("wget");
+        _commands.Add("whoami");
+
         LoadSettings();
+
+        //Console.SetWindowSize(_settings.Terminal.WindowWidth, _settings.Terminal.WindowHeight);        
+        //Console.SetWindowSize(_settings.Terminal.WindowWidth, _settings.Terminal.WindowHeight);
         Terminal = new(_settings.Colors.Default);
         EnglishStrings _strings = new EnglishStrings();
         EnglishCharacterLimits _limits = new EnglishCharacterLimits();
@@ -36,8 +91,8 @@ class Program
         bash = new Bash();
         IsFirstRun();
         System.Threading.Thread.Sleep(_defaultDelay);
-        if (_isFirstRun)
-            _results = _shell.RunCommand("clear");
+        
+        //ClearTerminal();
 
         ShowDevider(" ");
         Terminal.WriteCentered(_strings.Get("ApplicationName"));
@@ -47,12 +102,10 @@ class Program
 
         if (_isFirstRun)
         {
-            ShowMessage($"Kernal: {_shell.RunCommand("uname", "-s")}");
-            ShowMessage($"Hostname: {_shell.RunCommand("uname", "-n")}");
-            ShowMessage($"CPU: {_shell.RunCommand("uname", "-p")}");
-            ShowMessage($"OS: {_shell.RunCommand("uname", "-o")}");
+            DisplaySystemInfo();
         }
         ShowDevider(" ");
+        ShowMessage(" ");
 
         
         /*
@@ -61,7 +114,7 @@ class Program
         tmp = "";    
         while(tmp == "")
             tmp = ShowPrompt(_strings.Get("PromptName"), _strings.Get("StringName"), _limits.Get("NameMin"), _limits.Get("NameMax"), ['1','2','3','4','5','6','7','8','9','0','!','@','#','$','%','^','&','*','(',')','-','=','-','+']);                      
-        Commands.Update("sudo", tmp);
+        _commands.Update("sudo", tmp);
         */
 
         if (_key == "")
@@ -99,64 +152,20 @@ class Program
             // check for arrow keys
             if (_results == Constants.UPARROW)
             {
-                Terminal.Input = _buffer.Previous();
+                Terminal.Prompt(_buffer.Previous());
                 continue;
             }
             else if (_results == Constants.DOWNARROW)
-            {
-                Terminal.Input = _buffer.Next();
+            {                
+                Terminal.Prompt(_buffer.Next());
                 continue;
             }
 
             _results = BufferCommand(_results);
             // handle special commands
-            if (_results.StartsWith($"{_strings.Get("MenuOptionEncryptFile")}"))
-            {
-                string[] parts = _results.Split(" ");
-                EncryptFile(parts[1]);
-                continue;
-            } 
-            else if (_results.StartsWith($"{_strings.Get("MenuOptionDecryptFile")}"))
-            {
-                string[] parts = _results.Split(" ");
-                DecryptFile(parts[1]);
-                continue;
-            } 
-            // Handle menu options
-            if (_results == _strings.Get("MenuOptionExit") || _results == _strings.Get("MenuOptionQuit"))
-            {
-                RevertNames();
-                _exitCode = 1;
-            }
-            else if (_results == _strings.Get("MenuOptionMenu"))
-            {
-                DisplayMenu(_strings);
-            }
-            else if (_results == _strings.Get("MenuOptionSettings"))
-            {
-                // ToDo: Launch settings display
-            }
-            else if (_results == _strings.Get("MenuOptionRevert"))
-            {
-                RevertNames();
-            }
-            else if (_results == _strings.Get("MenuOptionConvert"))
-            {
-                ObsificateFileNames();
-            }
-            else if (_results == _strings.Get("MenuOptionTest"))
-            {
-                TestKey(_key);
-            }           
-            else if (_results == _strings.Get("MenuOptionLoadSettings"))
-            {
-                LoadSettings();
-            }
-            else if (_results == _strings.Get("MenuOptionSaveSettings"))
-            {
-                if(SaveSettings())
-                    ShowMessage(_strings.Get("SettingsSaveSuccess"));
-            }                        
+            if(_results.StartsWith(_specialCommands.Marker)){
+                HandleSpecialCommand(_results);
+            }                      
             else
             {
                 bool results = ExecuteHandledCommands(_results);
@@ -169,6 +178,69 @@ class Program
         }
     }
 
+    private static void HandleSpecialCommand(string command){
+        string option = "";
+        command = command.Replace(_specialCommands.Marker, "");
+        if(command.Contains(" "))
+        {
+            string[] parts = command.Split(" ");
+            command = parts[0];
+            option = parts[1];
+        }
+        SpecialCommand? commandDetails = _specialCommands.GetFromCommand(command);
+        if(commandDetails == null){
+            ShowError("Command not found");
+            return;
+        }
+
+            if(commandDetails.Id == CommandType.MENU)
+            {
+                DisplayMenu();
+            }
+            else if(commandDetails.Id == CommandType.BLUR)
+            {
+                ObsificateFileNames();
+            }
+            else if(commandDetails.Id == CommandType.FOCUS)
+            {
+                ResetFileNames();
+            } 
+            else if(commandDetails.Id == CommandType.RUN)
+            {
+                // TODO: Run shell script
+            } 
+            else if(commandDetails.Id == CommandType.CONVERT)
+            {
+                // TODO: Convert shell script
+            }                         
+            else if(commandDetails.Id == CommandType.ENCRYPT)
+            {
+                EncryptFile(option);
+            } 
+            else if(commandDetails.Id == CommandType.DECRYPT)
+            {
+                DecryptFile(option);
+            } 
+            else if(commandDetails.Id == CommandType.SHOW)
+            {
+                ShowCommandValue(option);
+            } 
+            else if(commandDetails.Id == CommandType.TEST)
+            {
+                TestKey(_key);
+            }  
+            else if(commandDetails.Id == CommandType.PAST)
+            {
+                DisplayCommandHistory();
+            }                         
+            else if(commandDetails.Id == CommandType.QUIT)
+            {
+                ResetFileNames();
+                _exitCode = 1;
+            } 
+
+    }
+
     private static string GetKey(ILocalizedStrings strings, ICharacterLimits limits)
     {
         string tmp = "";
@@ -178,56 +250,62 @@ class Program
         return tmp;
     }
 
-    private static void DisplayMenu(ILocalizedStrings strings)
+    private static void DisplaySystemInfo()
     {
         LineColors firstColor = new LineColors(ConsoleColor.Blue, ConsoleColor.Black);
         LineColors secondColor = new LineColors(ConsoleColor.White, ConsoleColor.Black); ;
         int count = 1;
-        string seperator = " - ";
-        //Terminal.Write(_shell.RunCommand("clear", ""));
-        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
-        Terminal.WriteCentered("Menu");
-        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
+        string seperator = ": ";
 
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionQuit")}{seperator}", firstColor);
-        AddEndMessage("Exit the console.", secondColor);
+        AddMessage($"    ", secondColor);
+        AddMessage($"Kernal{seperator}", firstColor);
+        AddEndMessage($"{_shell.RunCommand("uname", "-s")}", secondColor);
 
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionConvert")}{seperator}", firstColor);
-        AddEndMessage("Obsificate the commands.", secondColor);
+        AddMessage($"    ", secondColor);
+        AddMessage($"Hostname{seperator}", firstColor);
+        AddEndMessage($"{_shell.RunCommand("uname", "-n")}", secondColor);
 
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionRevert")}{seperator}", firstColor);
-        AddEndMessage("Revert to non obsfucated.", secondColor);
-        
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionLoadSettings")}{seperator}", firstColor);
-        AddEndMessage("Loads the settings.", secondColor);
+        AddMessage($"    ", secondColor);
+        AddMessage($"CPU{seperator}", firstColor);
+        AddEndMessage($"{_shell.RunCommand("uname", "-p")}", secondColor);
 
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionSaveSettings")}{seperator}", firstColor);
-        AddEndMessage("Saves the settings.", secondColor);
+        AddMessage($"    ", secondColor);
+        AddMessage($"OS{seperator}", firstColor);
+        AddEndMessage($"{_shell.RunCommand("uname", "-o")}", secondColor);                
 
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionEncryptFile")}{seperator}", firstColor);
-        AddEndMessage("Encrypt a file.", secondColor);
-
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionDecryptFile")}{seperator}", firstColor);
-        AddEndMessage("Decrypt a file.", secondColor);
-
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionSettings")}{seperator}", firstColor);
-        AddEndMessage("Edit the console settings.", secondColor);
-
-        AddMessage($"{count++}. ", secondColor);
-        AddMessage($"{strings.Get("MenuOptionTest")}{seperator}", firstColor);
-        AddEndMessage("Test to make sure commands are obsfucated.", secondColor);
-
-        ShowDevider(" ", new LineColors(ConsoleColor.DarkBlue, ConsoleColor.DarkBlue));
     }
 
+    private static void DisplayMenu()
+    {
+        ClearTerminal();
+        LineColors firstColor = _settings.Colors.Default;
+        LineColors secondColor = _settings.Colors.Commands;
+        LineColors deviderColor = new LineColors(_settings.Colors.Commands.TextColor, _settings.Colors.Commands.TextColor);
+        string marker = _specialCommands.Marker;
+        ShowDevider(" ", deviderColor);
+        Terminal.WriteCentered("Menu");
+        ShowDevider(" ", deviderColor);
+
+        foreach(SpecialCommand cmd in _specialCommands.GetAll())
+        {
+            AddMessage($"    ", firstColor);
+            AddMessage($"{marker}{cmd.Command} {cmd.Options} ", firstColor);
+            AddEndMessage($"{cmd.Description}", secondColor);
+        }     
+
+        ShowDevider(" ", deviderColor);
+        ShowMessage(" ");
+    }
+
+    private static void DisplayCommandHistory()
+    {
+        List<string> pastCommands = _buffer.GetAll();
+        for(int i = 0; i < pastCommands.Count(); i++)
+        {
+            ShowMessage($"{i}. {pastCommands[i]}");
+        }
+
+    }
 
     private static string GetWorkingDirectory()
     {
@@ -245,7 +323,8 @@ class Program
         if(target.Contains('/') == false){
             target = $"{_workingDirectory}/{target}";
         }
-        BashResult results = bash.Command($"cd \"{target}\"");
+        string fullCommand = $"{_commands.Get("cd")} '{target}'";
+        BashResult results = bash.Command(fullCommand);
         if (results.ExitCode != 0){
             ShowError("Invalid path");
             return;
@@ -282,7 +361,7 @@ class Program
         }
         if (fullCommand == "ls")
         {
-            string command = $"{Commands.Get("ls")} -a '{GetWorkingDirectory()}'";
+            string command = $"{_commands.Get("ls")} -a '{GetWorkingDirectory()}'";
             BashResult results = bash.Command(command);
             if (results.ExitCode == 0)
             {
@@ -293,30 +372,29 @@ class Program
                 ShowError(results.ErrorMsg);
             }
             return true;
-        }
+        }      
         else if (fullCommand.StartsWith("ls "))
         {
-                string command = $"{Commands.Get("ls")}";
-                string flags = "";
-                string filepath = GetWorkingDirectory();
-                string[] parts = fullCommand.Split(" ");
-                // Check for flags
-                if (parts[1].StartsWith("-"))
-                {
-                    flags = parts[1];
-                    if (parts.Length > 2)
-                        filepath = parts[2];
-                }
-                else
-                {
-                    filepath = parts[1];
-                }
-                command += flags.Count() > 0 ? $" {flags} " : "";
-                command += $"{filepath}";
-                ShowDebug($"Command = {command}");
-                BashResult results = bash.Command(command);
+            string command = $"{_commands.Get("ls")}";
+            fullCommand = fullCommand.Replace("ls ", $"{command} -a '{GetWorkingDirectory()}' ");
+            BashResult results = bash.Command(fullCommand);
+            ShowDebug($"fullCommand = {fullCommand}   results.ExitCode:{results.ExitCode}");
+            if (results.ExitCode == 0)
+            {
+                Terminal.WriteInColumns(results.Lines);
+            }
+            else
+            {
+                ShowError(results.ErrorMsg);
+            }
+            return true;
         }
-        if (fullCommand == "swd")
+        else if (fullCommand == "clear")
+        {
+            ClearTerminal();
+            return true;
+        } 
+        else if (fullCommand == "swd")
         {
             ShowWorkingDirectory();
             return true;
@@ -335,7 +413,7 @@ class Program
 
     private static bool ExecuteSimpleCommand(string fullCommand)
     {
-        string tmp = Commands.Get(fullCommand);
+        string tmp = _commands.Get(fullCommand);
         string command = String.IsNullOrWhiteSpace(tmp) ? fullCommand : tmp;
         ShowDebug($"Command - {fullCommand} --> {command}");
         var bashResults = bash.Command(command);
@@ -353,7 +431,7 @@ class Program
         string[] parts = _results.Split(" ");
         for (int i = 0; i < parts.Length; i++)
         {
-            string tmpPart = Commands.Get(parts[i]);
+            string tmpPart = _commands.Get(parts[i]);
             if (!String.IsNullOrWhiteSpace(tmpPart))
                 parts[i] = tmpPart;
         }
@@ -380,13 +458,13 @@ class Program
 
     private static bool TestKey(string key)
     {
-        var list = Commands.GetList();
-        int total = Commands.Count();
+        var list = _commands.GetList();
+        int total = _commands.Count();
         int count = 0;
-        string findCommand = Commands.Get("find");
+        string findCommand = _commands.Get("find");
         foreach (string command in list)
         {
-            string obfuscatedCommand = Commands.Get(command);
+            string obfuscatedCommand = _commands.Get(command);
             bool success = FindFile(obfuscatedCommand);
             if (success)
                 count++;
@@ -397,7 +475,7 @@ class Program
 
     private static bool FindFile(string fileName)
     {
-        //string findCommand = Commands.Get("find");
+        //string findCommand = _commands.Get("find");
         string findCommand = "find";
         var results = bash.Command($"{_fileDirectory}{findCommand} {_fileDirectory}{fileName}");
         System.Threading.Thread.Sleep(_defaultDelay);
@@ -406,13 +484,13 @@ class Program
 
     private static void ObsificateCommandNames()
     {
-        foreach (string command in Commands.GetList())
+        foreach (string command in _commands.GetList())
         {
-            string obsfucated = Commands.Get(command);
+            string obsfucated = _commands.Get(command);
             if (obsfucated == "")
             {
                 obsfucated = _scramble.HashString(command);
-                Commands.Update(command, obsfucated);
+                _commands.Update(command, obsfucated);
             }
         }
     }
@@ -420,11 +498,11 @@ class Program
     private static void ObsificateFileNames()
     {
         ObsificateCommandNames();
-        ShowMessage($"Converting {Commands.Count()} system commands.");
-        foreach (string command in Commands.GetList())
+        ShowMessage($"Converting {_commands.Count()} system commands.");
+        foreach (string command in _commands.GetList())
         {
             bool originalFound = FindFile(command);
-            string obsfucated = Commands.Get(command);
+            string obsfucated = _commands.Get(command);
             if (originalFound)
             {                
                 bash.Mv($"{_fileDirectory}{command}", $"{_fileDirectory}{obsfucated}");
@@ -435,7 +513,7 @@ class Program
                 ShowUpdate($"{successString} Converting: {command} -> {obsfucated}", useColors);
                 if (!success)
                 {
-                    Commands.Update(command, command);
+                    _commands.Update(command, command);
                 }
             }
             else
@@ -444,12 +522,11 @@ class Program
                 if (!obsfucatedFound)
                 {
                     ShowUpdate($"{command} Not Found!");
-                    Commands.Remove(command);
+                    _commands.Remove(command);
                 }
                 else
                 {
                     ShowUpdate($"{command} Found!");
-                    //Commands.Update(command, obsfucated);
                 }
             }
         }
@@ -457,14 +534,14 @@ class Program
 
     }
 
-    private static void RevertNames()
+    private static void ResetFileNames()
     {
-        ShowMessage($"Reverting {Commands.Count()} system commands.");
-        foreach (string command in Commands.GetList())
+        ShowMessage($"Reverting {_commands.Count()} system commands.");
+        foreach (string command in _commands.GetList())
         {
-            string currentCommand = Commands.Get(command);
+            string currentCommand = _commands.Get(command);
             bash.Mv($"{_fileDirectory}{currentCommand}", $"{_fileDirectory}{command}");
-            Commands.Update(command, command);
+            _commands.Update(command, command);
             ShowUpdate($"Reverting: {currentCommand} -> {command}");
             System.Threading.Thread.Sleep(_defaultDelay);
         }
@@ -506,9 +583,7 @@ class Program
     {
         try{
             ShowDebug("SaveSettings()");
-            //string jsonString = JsonSerializer.Serialize(_settings);
-            string jsonString = JsonSerializer.Serialize(new Settings.Terminal());
-            ShowDebug($"jsonString = {jsonString}");
+            string jsonString = JsonSerializer.Serialize(_settings);
             bool success = SaveFile(_settingsFile, jsonString);
             return true;
         }
@@ -522,7 +597,6 @@ class Program
     private static void LoadSettings()
     {
         try{
-            ShowDebug("LoadSettings()");
             string jsonString = LoadFile(_settingsFile);
             Settings.Application? settings = JsonSerializer.Deserialize<Settings.Application>(jsonString);
             if(settings == null)
@@ -531,7 +605,7 @@ class Program
         }
         catch(Exception ex)
         {
-            ShowDebug("Failed to load file.");
+            ShowError($"Failed to load file. {ex.Message}");
             _settings = new Settings.Application();
             SaveSettings();
         }
@@ -539,14 +613,16 @@ class Program
 
     private static string LoadFile(string filepath)
     {
-        ShowDebug($"LoadFile( {filepath} )");
-        string command = Commands.Get("cat");
-        BashResult results = bash.Command($"{command} {filepath}");
-        ShowDebug($"Loading file {filepath} - ExitCode = {results.ExitCode}");
-        if(results.ExitCode != 0){
-            throw new Exception(results.ErrorMsg);
-        }    
-        return results.Output;
+        try
+        {
+            string content = File.ReadAllText(filepath);
+            return content;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to load file {filepath} - {ex.Message}");
+        }
+        
     }
 
     private static bool SaveFile(string filepath, string content)
@@ -555,9 +631,9 @@ class Program
         {
             File.WriteAllText(filepath, content);
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception($"Failed to save file {filepath}");
+            throw new Exception($"Failed to save file {filepath} - {ex.Message}");
         }
         return true;
     }    
@@ -573,10 +649,8 @@ class Program
 
     private static void EncryptFile(string filepath){
         try{            
-            ShowDebug($"EncryptFile( {filepath} )");
             string content = LoadFile(filepath);
-            ShowDebug($"content = {content}");
-            string encrypted = StringEncrypt.Encrypt(content, _key);
+            string encrypted = Libs.SecLib.Encryption.PlainText.Encrypt(content, _key);
             SaveFile(filepath, encrypted);
         }
         catch(Exception ex)
@@ -587,10 +661,8 @@ class Program
 
     private static void DecryptFile(string filepath){
         try{            
-            ShowDebug($"DecryptFile( {filepath} )");
             string content = LoadFile(filepath);
-            ShowDebug($"content = {content}");
-            string decrypted = StringEncrypt.Decrypt(content, _key);
+            string decrypted = Libs.SecLib.Encryption.PlainText.Decrypt(content, _key);
             SaveFile(filepath, decrypted);
         }
         catch(Exception ex)
@@ -599,20 +671,18 @@ class Program
         }
     }    
 
-    private static void UnEncryptFile(string filepath){
-        try{
-            string results = LoadFile(filepath);
-            string hashed = _scramble.HashString(results);
-            SaveFile(filepath, hashed);
-        }
-        catch(Exception ex)
-        {
-            ShowError(ex.Message);
-        }
-    }    
+    private static void ShowCommandValue(string command){
+        string obfuscatedCommand = _commands.Get(command);        
+        BashResult results = bash.Command(command);
+        ShowMessage($"'{command}' -> '{obfuscatedCommand}'");
+    }
 
+    private static void ClearTerminal(){
+        ShowDebug("ClearTerminal()");
+        Console.Clear();
+    }
 
-    private static void ShowMessage(string message){
+     private static void ShowMessage(string message){
         Terminal.WriteLine(message, _settings.Colors.Default);
     }
     private static void ShowMessage(string message, LineColors colors){
